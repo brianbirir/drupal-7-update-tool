@@ -1,1 +1,1 @@
-# Drupal 7 Update Automatter
+# Drupal 7 Update Tool
