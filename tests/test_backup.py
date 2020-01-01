@@ -2,6 +2,7 @@ import os
 import shutil
 import pytest
 import datetime
+
 from src.backup import get_file_paths, compress_backup, MissingDirectoryException
 
 TEMP_DIRECTORY = '/tmp/tempDir'
