@@ -3,45 +3,10 @@ import tarfile
 
 import requests
 
+from src.lib import exceptions
+
 DOWNLOAD_TMP = '/tmp/drupal_update'
 DRUPAL_DOWNLOAD_BASE_URL = 'https://ftp.drupal.org/files/projects/drupal-'
-
-
-class MissingDirectoryException(Exception):
-    """Raised when directory is missing"""
-    def __init__(self):
-        Exception.__init__(self, "The directory does not exist!")
-
-
-class MissingVersion(Exception):
-    """Raised when Drupal 7 version is missing"""
-    def __init__(self):
-        Exception.__init__(self, "The version of Drupal 7 is missing!")
-
-
-class InaccessibleDownloadLink(Exception):
-    """Raised when Download link returns a response code other than 200"""
-    def __init__(self):
-        Exception.__init__(
-            self, "Response error while accessing Drupal download link!")
-
-
-class UnsuccessfulFileDownload(Exception):
-    """Raised when file download fails"""
-    def __init__(self):
-        Exception.__init__(self, "The download failed!")
-
-
-class WrongFileFormat(Exception):
-    """Raised when downloaded Drupal update file is wrong file format"""
-    def __init__(self):
-        Exception.__init__(self, "Downloaded file is wrong file format!")
-
-
-class FileExtractionFailed(Exception):
-    """Raised when extracting Drupal zip file fails"""
-    def __init__(self):
-        Exception.__init__(self, "Extraction of Zip file failed!")
 
 
 def ping_url(response: int) -> bool:
@@ -54,7 +19,7 @@ def get_url(version: str) -> str:
     """Gets and validates url"""
     # check if version is empty
     if not version:
-        raise MissingVersion()
+        raise exceptions.MissingDirectoryException()
 
     try:
         full_url = ''.join([DRUPAL_DOWNLOAD_BASE_URL, version, '.tar.gz'])
@@ -64,7 +29,7 @@ def get_url(version: str) -> str:
             print('Drupal download link is accessible')
             return full_url
         else:
-            raise InaccessibleDownloadLink()
+            raise exceptions.InaccessibleDownloadLink()
     except requests.exceptions.ConnectionError as e:
         print(str(e))
 
@@ -91,7 +56,7 @@ def download_drupal_update(version: str) -> bool:
         else:
             print('Not a tar file!')
 
-    except UnsuccessfulFileDownload as e:
+    except exceptions.UnsuccessfulFileDownload as e:
         print(str(e))
     except Exception as e:
         print(str(e))
@@ -112,7 +77,7 @@ def uncompress_drupal_update(drupal_file: str, drupal_version: str):
                 print('File extraction successful')
                 return True
             else:
-                raise MissingDirectoryException()
+                raise exceptions.MissingDirectoryException()
         else:
             print('Not a tar file!')
     except Exception as e:
