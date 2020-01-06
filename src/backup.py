@@ -3,11 +3,7 @@ import sys
 import datetime
 import zipfile
 
-
-class MissingDirectoryException(Exception):
-    """Raised when directory is missing"""
-    def __init__(self):
-        Exception.__init__(self, "The directory does not exist!")
+from src.lib.exceptions import MissingDirectoryException
 
 
 def get_file_paths(dir_name: str) -> list:

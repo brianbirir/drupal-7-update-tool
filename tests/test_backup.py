@@ -1,9 +1,11 @@
 import os
 import shutil
-import pytest
 import datetime
 
-from src.backup import get_file_paths, compress_backup, MissingDirectoryException
+import pytest
+
+from src.backup import get_file_paths, compress_backup
+from src.lib import exceptions
 
 TEMP_DIRECTORY = '/tmp/tempDir'
 
@@ -26,7 +28,7 @@ def test_get_file_paths_success(initialize_folders):
 
 
 def test_get_file_paths_failure():
-    with pytest.raises(MissingDirectoryException):
+    with pytest.raises(exceptions.MissingDirectoryException):
         get_file_paths('/tmp/fakeDirectory')
 
 
